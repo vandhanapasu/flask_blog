@@ -7,25 +7,12 @@ from Flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm, Pos
 from Flask_blog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
-posts = [
-    {
-        'author': 'vandhana',
-        'title': 'first-blog',
-        'content': 'first content',
-        'date_posted': 'jan 17 2021'
-    },
-    {
-        'author': 'sajji',
-        'title': 'second-blog',
-        'content': 'second content',
-        'date_posted': 'jan 18 2021'
-    }
-]
 
 
 @app.route("/")
 @app.route("/home")
 def home():
+    posts = Post.query.all()
     return render_template('home.html', posts=posts)
 
 
@@ -117,7 +104,7 @@ def new_post():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
-        db.session.add(Post)
+        db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
