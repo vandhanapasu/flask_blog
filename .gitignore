@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*:db
+Flask_blog/site:db
 
 # C extensions
 *.so
@@ -128,3 +128,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+*.jpg
+*.png
+*.DS_Store
