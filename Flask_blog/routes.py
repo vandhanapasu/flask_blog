@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from Flask_blog import app, db, bcrypt
-from Flask_blog.forms import RegistrationForm, LoginForm
+from Flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from Flask_blog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -68,7 +68,24 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/account")
+@app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated', 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    """
+    the above redirect is returned to avoid post_get redirect pattern. If it is not redirected, 
+    it go the render_template below even after you submit which is post.
+    The below render template will be a get. So there is a post get redirect pattern. 
+    eg. 
+    """
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template('account.html', title='Account', image_file=image_file, form=form)
