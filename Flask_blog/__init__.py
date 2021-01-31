@@ -22,4 +22,13 @@ app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
 app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
 mail = Mail(app)
 
-from Flask_blog import routes
+
+from Flask_blog.users.routes import users
+from Flask_blog.posts.routes import posts
+from Flask_blog.main.routes import main
+
+app.register_blueprint(users)
+app.register_blueprint(posts)
+app.register_blueprint(main)
+
+
